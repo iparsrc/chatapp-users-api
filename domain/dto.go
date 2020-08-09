@@ -1,7 +1,7 @@
 package domain
 
 type User struct {
-	// These fields are provided from google.
+	// These fields are provided by google.
 	ID         string `json:"id" bson:"_id"`
 	Email      string `json:"email" bson:"email"`
 	Picture    string `json:"picture" bson:"picture"`
