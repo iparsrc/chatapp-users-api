@@ -9,6 +9,7 @@ type User struct {
 	GivenName  string `json:"givenName" bson:"givenName"`
 	FamilyName string `json:"familyName" bson:"familyName"`
 	// These fields are platform specific.
+	DateCreated    string   `json:"dateCreated" bson:"dateCreated"`
 	ContactsIDs    []string `json:"contactsIds" bson:"contactsIds"`
 	JoinedGroupIDs []string `json:"joinedGroupIds" bson:"joinedGroupIds"`
 }
