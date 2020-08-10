@@ -14,7 +14,7 @@ func Create(user *User) (*User, *utils.RestErr) {
 	defer cancel()
 	_, err := usersC.InsertOne(ctx, user)
 	if err != nil {
-		return nil, utils.InternalServerErr("Can't create user.")
+		return nil, utils.InternalServerErr("can't create user.")
 	}
 	return user, nil
 }
@@ -80,6 +80,28 @@ func Update(id, email, picture, fullName, givenName, familyName, description str
 	}
 	if result.ModifiedCount == 0 {
 		return utils.BadRequest("invalid update request.")
+	}
+	return nil
+}
+
+func AddGroup(id, groupID string) *utils.RestErr {
+	usersC := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	update := bson.M{
+		"$addToSet": bson.M{
+			"JoinedGroupIDs": groupID,
+		},
+	}
+	result, err := usersC.UpdateOne(ctx, bson.M{"_id": id}, update)
+	if err != nil {
+		return utils.InternalServerErr(err.Error())
+	}
+	if result.MatchedCount == 0 {
+		return utils.NotFound("user with the given id, not found.")
+	}
+	if result.ModifiedCount == 0 {
+		return utils.InternalServerErr("can't add group to joined groups.")
 	}
 	return nil
 }
