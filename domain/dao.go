@@ -123,7 +123,29 @@ func DelGroup(id, groupID string) *utils.RestErr {
 		return utils.NotFound("user not found.")
 	}
 	if result.ModifiedCount == 0 {
-		return utils.InternalServerErr("not joined to the group already.")
+		return utils.BadRequest("not joined to the group already.")
+	}
+	return nil
+}
+
+func AddContact(id, contactID string) *utils.RestErr {
+	usersC := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	update := bson.M{
+		"$addToSet": bson.M{
+			"ContactsIDs": contactID,
+		},
+	}
+	result, err := usersC.UpdateOne(ctx, bson.M{"_id": id}, update)
+	if err != nil {
+		return utils.InternalServerErr(err.Error())
+	}
+	if result.MatchedCount == 0 {
+		return utils.NotFound("user not found.")
+	}
+	if result.ModifiedCount == 0 {
+		return utils.BadRequest("this contact already exists.")
 	}
 	return nil
 }
