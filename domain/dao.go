@@ -149,3 +149,25 @@ func AddContact(id, contactID string) *utils.RestErr {
 	}
 	return nil
 }
+
+func DelContact(id, contactID string) *utils.RestErr {
+	usersC := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	update := bson.M{
+		"$pull": bson.M{
+			"ContactsIDs": contactID,
+		},
+	}
+	result, err := usersC.UpdateOne(ctx, bson.M{"_id": id}, update)
+	if err != nil {
+		return utils.BadRequest(err.Error())
+	}
+	if result.MatchedCount == 0 {
+		return utils.NotFound("user not found.")
+	}
+	if result.ModifiedCount == 0 {
+		return utils.BadRequest("contact is not in contacts list already.")
+	}
+	return nil
+}
