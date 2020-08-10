@@ -52,7 +52,7 @@ func Delete(id string) *utils.RestErr {
 		return utils.BadRequest(err.Error())
 	}
 	if result.DeletedCount == 0 {
-		return utils.NotFound("user not found.")
+		return utils.NotFound("user doesn't exist.")
 	}
 	return nil
 }
@@ -79,7 +79,7 @@ func Update(id, email, picture, fullName, givenName, familyName, description str
 		return utils.NotFound("user not found.")
 	}
 	if result.ModifiedCount == 0 {
-		return utils.BadRequest("invalid update request.")
+		return utils.BadRequest("nothing to upadate user is up to date already.")
 	}
 	return nil
 }
@@ -101,7 +101,7 @@ func AddGroup(id, groupID string) *utils.RestErr {
 		return utils.NotFound("user with the given id, not found.")
 	}
 	if result.ModifiedCount == 0 {
-		return utils.InternalServerErr("can't add group to joined groups.")
+		return utils.InternalServerErr("already joined to the the group.")
 	}
 	return nil
 }
@@ -123,7 +123,7 @@ func DelGroup(id, groupID string) *utils.RestErr {
 		return utils.NotFound("user not found.")
 	}
 	if result.ModifiedCount == 0 {
-		return utils.InternalServerErr("can't delete group from joined groups.")
+		return utils.InternalServerErr("not joined to the group already.")
 	}
 	return nil
 }
