@@ -65,6 +65,42 @@ func TestUpdate(t *testing.T) {
 	}
 }
 
+func TestAddGroup(t *testing.T) {
+	restErr := AddGroup("1", "A")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+	restErr = AddGroup("1", "B")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+}
+
+func TestDelGroup(t *testing.T) {
+	restErr := DelGroup("1", "A")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+}
+
+func TestAddContact(t *testing.T) {
+	restErr := AddContact("1", "a")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+	restErr = AddContact("1", "b")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+}
+
+func TestDelContact(t *testing.T) {
+	restErr := DelContact("1", "a")
+	if restErr != nil {
+		t.Errorf(restErr.Message)
+	}
+}
+
 func TestDelete(t *testing.T) {
 	restErr := Delete("1")
 	if restErr != nil {
