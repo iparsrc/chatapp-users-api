@@ -105,3 +105,25 @@ func AddGroup(id, groupID string) *utils.RestErr {
 	}
 	return nil
 }
+
+func DelGroup(id, groupID string) *utils.RestErr {
+	usersC := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	update := bson.M{
+		"$pull": bson.M{
+			"JoinedGroupIDs": groupID,
+		},
+	}
+	result, err := usersC.UpdateOne(ctx, bson.M{"_id": id}, update)
+	if err != nil {
+		return utils.BadRequest("user is not joined to the group with the specified id.")
+	}
+	if result.MatchedCount == 0 {
+		return utils.NotFound("user not found.")
+	}
+	if result.ModifiedCount == 0 {
+		return utils.InternalServerErr("can't delete group from joined groups.")
+	}
+	return nil
+}
