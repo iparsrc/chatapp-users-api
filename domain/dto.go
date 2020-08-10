@@ -11,6 +11,6 @@ type User struct {
 	// These fields are platform specific.
 	DateCreated    int64    `json:"dateCreated" bson:"dateCreated"` // Unix time.
 	Description    string   `json:"description" bson:"description"`
-	ContactsIDs    []string `json:"contactsIds" bson:"contactsIds"`
+	ContactIDs     []string `json:"contactIds" bson:"contactIds"`
 	JoinedGroupIDs []string `json:"joinedGroupIds" bson:"joinedGroupIds"`
 }
