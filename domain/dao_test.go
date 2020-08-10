@@ -14,6 +14,8 @@ func TestConnectDB(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
+	// TODO: Add another user.
+	// TODO: Try Create func on a user that exists.
 	user := User{
 		ID:          "1",
 		GivenName:   "Parsa",
@@ -32,6 +34,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestRetrive(t *testing.T) {
+	// TODO: Try to retrive a user that doesn't exists and check for expected errors.
 	privateUser, restErr := Retrive("1", true)
 	if restErr != nil {
 		t.Errorf(restErr.Message)
@@ -51,6 +54,7 @@ func TestRetrive(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	// TODO: Try the update func with the same values and check for errors.
 	restErr := Update(
 		"1",
 		"parsaakbari80808080@gmail.com",
@@ -66,6 +70,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestAddGroup(t *testing.T) {
+	// TODO: Try to add a group that already is a member and check for errors.
 	restErr := AddGroup("1", "A")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
@@ -77,6 +82,7 @@ func TestAddGroup(t *testing.T) {
 }
 
 func TestDelGroup(t *testing.T) {
+	// TODO: Try to delete a group that the user is not a member of.
 	restErr := DelGroup("1", "A")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
@@ -84,6 +90,7 @@ func TestDelGroup(t *testing.T) {
 }
 
 func TestAddContact(t *testing.T) {
+	// TODO: Try to add a contact that already exists and check for errors.
 	restErr := AddContact("1", "a")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
@@ -95,6 +102,7 @@ func TestAddContact(t *testing.T) {
 }
 
 func TestDelContact(t *testing.T) {
+	// TODO: Try to delete a contact that doesn't exist.
 	restErr := DelContact("1", "a")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
