@@ -5,13 +5,9 @@ import (
 	"testing"
 )
 
-const (
-	uri = "mongodb://localhost:27017"
+var (
+	repo = NewRepository()
 )
-
-func TestConnectDB(t *testing.T) {
-	ConnectDB(uri)
-}
 
 func TestCreate(t *testing.T) {
 	// TODO: Add another user.
@@ -24,7 +20,7 @@ func TestCreate(t *testing.T) {
 		FullName:    "Parsa Akbari",
 		Email:       "akbariparsa1209@gmail.com",
 	}
-	result, restErr := Create(&user)
+	result, restErr := repo.Create(&user)
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -35,7 +31,7 @@ func TestCreate(t *testing.T) {
 
 func TestRetrive(t *testing.T) {
 	// TODO: Try to retrive a user that doesn't exists and check for expected errors.
-	privateUser, restErr := Retrive("1", true)
+	privateUser, restErr := repo.Retrive("1", true)
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -43,7 +39,7 @@ func TestRetrive(t *testing.T) {
 		t.Errorf("Private user with id 1 must not be nil.")
 	}
 	fmt.Println("   ", *privateUser)
-	publicUser, restErr := Retrive("1", false)
+	publicUser, restErr := repo.Retrive("1", false)
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -55,7 +51,7 @@ func TestRetrive(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 	// TODO: Try the update func with the same values and check for errors.
-	restErr := Update(
+	restErr := repo.Update(
 		"1",
 		"parsaakbari80808080@gmail.com",
 		"",
@@ -71,11 +67,11 @@ func TestUpdate(t *testing.T) {
 
 func TestAddGroup(t *testing.T) {
 	// TODO: Try to add a group that already is a member and check for errors.
-	restErr := AddGroup("1", "A")
+	restErr := repo.AddGroup("1", "A")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
-	restErr = AddGroup("1", "B")
+	restErr = repo.AddGroup("1", "B")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -83,7 +79,7 @@ func TestAddGroup(t *testing.T) {
 
 func TestDelGroup(t *testing.T) {
 	// TODO: Try to delete a group that the user is not a member of.
-	restErr := DelGroup("1", "A")
+	restErr := repo.DelGroup("1", "A")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -91,11 +87,11 @@ func TestDelGroup(t *testing.T) {
 
 func TestAddContact(t *testing.T) {
 	// TODO: Try to add a contact that already exists and check for errors.
-	restErr := AddContact("1", "a")
+	restErr := repo.AddContact("1", "a")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
-	restErr = AddContact("1", "b")
+	restErr = repo.AddContact("1", "b")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
@@ -103,14 +99,14 @@ func TestAddContact(t *testing.T) {
 
 func TestDelContact(t *testing.T) {
 	// TODO: Try to delete a contact that doesn't exist.
-	restErr := DelContact("1", "a")
+	restErr := repo.DelContact("1", "a")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
 }
 
 func TestDelete(t *testing.T) {
-	restErr := Delete("1")
+	restErr := repo.Delete("1")
 	if restErr != nil {
 		t.Errorf(restErr.Message)
 	}
