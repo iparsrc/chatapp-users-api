@@ -8,7 +8,27 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func Create(user *User) (*User, *utils.RestErr) {
+// Repository interface specifies the needed methods for a users repository
+type Repository interface {
+	Create(user *User) (*User, *utils.RestErr)
+	Retrive(id string, private bool) (*User, *utils.RestErr)
+	Delete(id string) *utils.RestErr
+	Update(id, email, picture, fullName, givenName, familyName, description string) *utils.RestErr
+	AddGroup(id, groupID string) *utils.RestErr
+	DelGroup(id, groupID string) *utils.RestErr
+	AddContact(id, contactID string) *utils.RestErr
+	DelContact(id, contactID string) *utils.RestErr
+}
+
+type repository struct{}
+
+// NewRepository returns a new repository that implements the Repository interface.
+func NewRepository() Repository {
+	r := repository{}
+	return &r
+}
+
+func (r *repository) Create(user *User) (*User, *utils.RestErr) {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -19,7 +39,7 @@ func Create(user *User) (*User, *utils.RestErr) {
 	return user, nil
 }
 
-func Retrive(id string, private bool) (*User, *utils.RestErr) {
+func (r *repository) Retrive(id string, private bool) (*User, *utils.RestErr) {
 	var user User
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -43,7 +63,7 @@ func Retrive(id string, private bool) (*User, *utils.RestErr) {
 	return &user, nil
 }
 
-func Delete(id string) *utils.RestErr {
+func (r *repository) Delete(id string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -57,7 +77,7 @@ func Delete(id string) *utils.RestErr {
 	return nil
 }
 
-func Update(id, email, picture, fullName, givenName, familyName, description string) *utils.RestErr {
+func (r *repository) Update(id, email, picture, fullName, givenName, familyName, description string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -84,7 +104,7 @@ func Update(id, email, picture, fullName, givenName, familyName, description str
 	return nil
 }
 
-func AddGroup(id, groupID string) *utils.RestErr {
+func (r *repository) AddGroup(id, groupID string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -106,7 +126,7 @@ func AddGroup(id, groupID string) *utils.RestErr {
 	return nil
 }
 
-func DelGroup(id, groupID string) *utils.RestErr {
+func (r *repository) DelGroup(id, groupID string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -128,7 +148,7 @@ func DelGroup(id, groupID string) *utils.RestErr {
 	return nil
 }
 
-func AddContact(id, contactID string) *utils.RestErr {
+func (r *repository) AddContact(id, contactID string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -150,7 +170,7 @@ func AddContact(id, contactID string) *utils.RestErr {
 	return nil
 }
 
-func DelContact(id, contactID string) *utils.RestErr {
+func (r *repository) DelContact(id, contactID string) *utils.RestErr {
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
