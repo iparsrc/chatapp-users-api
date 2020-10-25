@@ -11,7 +11,7 @@ import (
 // Repository interface specifies the needed methods for a users repository
 type Repository interface {
 	Create(user *User) (*User, *utils.RestErr)
-	Retrive(id string, private bool) (*User, *utils.RestErr)
+	Retrive(id string) (*User, *utils.RestErr)
 	Delete(id string) *utils.RestErr
 	Update(id, email, picture, fullName, givenName, familyName, description string) *utils.RestErr
 	AddGroup(id, groupID string) *utils.RestErr
@@ -39,7 +39,7 @@ func (r *repository) Create(user *User) (*User, *utils.RestErr) {
 	return user, nil
 }
 
-func (r *repository) Retrive(id string, private bool) (*User, *utils.RestErr) {
+func (r *repository) Retrive(id string) (*User, *utils.RestErr) {
 	var user User
 	usersC := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -47,19 +47,6 @@ func (r *repository) Retrive(id string, private bool) (*User, *utils.RestErr) {
 	if err := usersC.FindOne(ctx, bson.M{"_id": id}).Decode(&user); err != nil {
 		return nil, utils.BadRequest("can't operate or find the user.")
 	}
-	// At this point the 'user' is filled with all the user information on the database.
-	if private {
-		// Return user's private profile.
-		return &user, nil
-	}
-	// Remove user's private data.
-	user.Email = ""
-	user.FullName = ""
-	user.FamilyName = ""
-	user.DateCreated = 0
-	user.ContactIDs = []string{}
-	user.JoinedGroupIDs = []string{}
-	// Return user's public profile.
 	return &user, nil
 }
 
