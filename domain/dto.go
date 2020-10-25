@@ -1,5 +1,6 @@
 package domain
 
+// User type is the data transfer object that represent a user in the platform.
 type User struct {
 	// These fields are provided by google.
 	ID         string `json:"id" bson:"_id"`
